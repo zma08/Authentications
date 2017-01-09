@@ -1,0 +1,52 @@
+
+create database [PirateDb] on primary
+(name=[PirateDb],filename='C:\Users\mazhe\Desktop\AuthenticationPractice\AuthenticationPractice\App_Data\PirateDb.mdf') 
+log on (name = [PirateDb_log],filename='C:\Users\mazhe\Desktop\AuthenticationPractice\AuthenticationPractice\App_Data\PirateDb_log.ldf');
+go
+
+use[PirateDb];
+go
+
+alter table [dbo].[Crews]
+drop constraint [fk_dbo.Crews_dbo.Ships_Id],	
+	constraint[fk_dbo.Crews_dbo.Pirates_Id]; 
+
+
+if OBJECT_ID ('dbo.Pirates') is not null
+drop table [dbo].[Pirates];
+
+if object_id ('dbo.Ships') is not null
+drop table [dbo].[Ships];
+
+if Object_id('Crews') is not null
+drop table [dbo].[Crews];
+go
+
+create table [dbo].[Pirates]
+(
+	[Id] int not null identity (1,1),
+	[Name] nvarchar(50) not null,
+	[Date] datetime2(7) not null,
+	constraint [pk_dbo.Pirates] primary key clustered ([Id]asc)
+);
+
+create table[dbo].[Ships]
+(
+	[Id] int not null identity (1,1),
+	[Name] nvarchar(20) not null,
+	[Type] nvarchar(10),
+	[Tonnage] int not null,
+	constraint [pk_dbo.Ships] primary key clustered ([Id]asc)
+);
+
+create table [dbo].[Crews]
+(
+	[Id] int not null identity(1,1),
+	[ShipId] int not null,
+	[PirateId] int not null,
+	[Booty] decimal not null,
+	constraint [pk_dob.Crews] primary key clustered([Id]asc),
+	constraint [fk_dbo.Crews_dbo.Ships_Id]	foreign key([ShipId]) references [dbo].[Ships]([Id]),
+	constraint[fk_dbo.Crews_dbo.Pirates_Id] foreign key([PirateId]) references [dbo].[Pirates]([Id])
+);
+
